@@ -1,1 +1,153 @@
 /** @format */
+:root {
+	--header-color: #252422;
+	--th-bg: #403d39;
+	--tr-even: #fffcf2;
+	--tr-odd: #ccc5b9;
+	--danger: #eb5e28;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+* {
+	font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+/* General */
+
+body {
+	background-color: #d4d4d4;
+}
+
+h1 {
+	color: var(--header-color);
+}
+
+.disable-select {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/* Component Classes */
+
+.container {
+	display: flex;
+	justify-content: center;
+}
+
+.row {
+	display: flex;
+}
+
+.row.input-field {
+	justify-content: space-between;
+	gap: 20px;
+	margin-bottom: 8px;
+}
+
+.col {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+/* Navbar */
+
+.Navbar {
+	display: flex;
+	justify-content: center;
+	gap: 75px;
+}
+
+.Navbar__Link {
+	font-size: larger;
+	color: var(--header-color);
+	text-decoration: none;
+	border-bottom: 1px solid rgba(0, 0, 0, 0);
+	transition: border-bottom 200ms ease, transform 100ms ease-in;
+}
+
+.Navbar__Link:hover {
+	color: var(--th-bg);
+	border-bottom: 1px solid var(--th-bg);
+	transform: translateY(-2px);
+}
+
+/* Books Section */
+
+.Books__Table {
+	border: 1px solid #222;
+}
+
+.Books__Table,
+th,
+td {
+	border-bottom: 1px solid #222;
+	border-collapse: collapse;
+	color: var(--header-color);
+}
+
+th {
+	padding: 7px 0;
+	background-color: var(--th-bg);
+	color: #fff;
+}
+
+td {
+	padding: 10px 15px;
+}
+
+tr:nth-child(even) {
+	background-color: var(--tr-even);
+}
+
+tr:nth-child(odd) {
+	background-color: var(--tr-odd);
+}
+
+td:nth-child(1) {
+	font-style: italic;
+}
+
+.Button__Delete {
+	background-color: var(--danger);
+	padding: 5px 15px;
+	color: #fff;
+	cursor: pointer;
+	border-radius: 5px;
+	transition: background-color 150ms ease-in;
+}
+
+.Button__Delete:hover {
+	background-color: #ca5121;
+	color: #eee;
+}
+
+/* Add book Section */
+input {
+	border: none;
+	outline: none;
+	border: 2px solid transparent;
+}
+
+input:required:invalid {
+	border-color: #ffc8c8;
+}
+
+input:required:invalid:focus {
+	border-color: #ff9090;
+}
+
+input:required {
+	border-color: rgb(155, 255, 155);
+}
+
+button {
+	padding: 5px 20px;
+}
