@@ -3,23 +3,12 @@
 import "./index.css";
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./Navbar";
-import App from "./App";
-import AddBooks from "./AddBooks";
 
-const devBaseName = "";
-// const prodBaseName = "/library-app";
+import App from "./App";
 
 ReactDOM.render(
 	<React.StrictMode>
-		<BrowserRouter basename={devBaseName}>
-			<Navbar />
-			<Routes>
-				<Route path='/' element={<App />} />
-				<Route path='/add-books' element={<AddBooks />} />
-			</Routes>
-		</BrowserRouter>
+		<App />
 	</React.StrictMode>,
 	document.getElementById("root")
 );
