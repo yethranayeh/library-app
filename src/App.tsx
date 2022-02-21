@@ -21,6 +21,7 @@ export default function App() {
 		const pagesInput = (document.querySelector("#pagesInput") as HTMLInputElement).value;
 		const readInput = (document.querySelector("#readInput") as HTMLInputElement).checked;
 		const newBook = {
+			id: books.length + 1,
 			name: bookName,
 			author: authorName,
 			pages: Number(pagesInput),
@@ -30,11 +31,18 @@ export default function App() {
 		setBooks([...books, newBook]);
 	}
 
+	function removeBookHandler(book: Book) {
+		const newBooks = books.filter((b) => {
+			return b.id !== book.id;
+		});
+		setBooks(newBooks);
+	}
+
 	return (
 		<BrowserRouter basename={devBaseName}>
 			<Navbar />
 			<Routes>
-				<Route path='/' element={<Home books={books} />} />
+				<Route path='/' element={<Home books={books} removeBookHandler={removeBookHandler} />} />
 				<Route path='/add-books' element={<AddBooks submitHandler={submitHandler} />} />
 			</Routes>
 		</BrowserRouter>

@@ -1,7 +1,7 @@
 /** @format */
 import Book from "./interface/Book";
 
-export default function Home({ books }: { books: Book[] }) {
+export default function Home({ books, removeBookHandler }: { books: Book[]; removeBookHandler: Function }) {
 	if (books.length === 0) {
 		return (
 			<div className='App'>
@@ -26,7 +26,7 @@ export default function Home({ books }: { books: Book[] }) {
 						<th style={{ color: "var(--danger)" }}>Remove</th>
 					</tr>
 					{books.map((book) => (
-						<tr key={book.name}>
+						<tr key={book.id}>
 							<td>{book.name}</td>
 							<td>{book.author}</td>
 							<td>{book.pages}</td>
@@ -34,7 +34,7 @@ export default function Home({ books }: { books: Book[] }) {
 								<input type='checkbox' defaultChecked={book.read} />
 							</td>
 							<td>
-								<span className='Button__Delete disable-select' onClick={() => ""}>
+								<span className='Button__Delete disable-select' onClick={() => removeBookHandler(book)}>
 									Remove
 								</span>
 							</td>
