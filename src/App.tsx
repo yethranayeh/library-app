@@ -4,7 +4,7 @@ import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "firebase
 import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { db, auth } from "./Firebase-config";
 import { useState, useEffect } from "react";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Navbar";
 import AlertObj from "./interface/AlertObj";
 import Alert from "./Alert";
@@ -313,7 +313,7 @@ export default function App() {
 	}
 
 	return (
-		<HashRouter>
+		<BrowserRouter>
 			<Navbar user={user} login={signInWithGoogle} logout={userSignOut} />
 			<Routes>
 				<Route
@@ -336,6 +336,6 @@ export default function App() {
 					alert={alert as AlertObj}
 				/>
 			)}
-		</HashRouter>
+		</BrowserRouter>
 	);
 }
