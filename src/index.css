@@ -143,6 +143,7 @@ h1 {
 	gap: var(--gap-md);
 	margin: var(--margin-lg);
 	padding: var(--padding-md);
+	padding-right: 10rem;
 
 	border: 2px solid black;
 	border-radius: var(--border-radius);
@@ -307,6 +308,14 @@ button {
 
 	td {
 		padding: 10px 13px;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	.Alert {
+		margin-right: auto;
+		margin-left: auto;
+		padding-right: var(--padding-md);
 	}
 }
 
