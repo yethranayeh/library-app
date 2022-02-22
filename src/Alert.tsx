@@ -5,12 +5,6 @@ import AlertIcon from "./AlertIcon";
 import Loading from "./Loading";
 
 export default function Alert({ loading, alert, style }: { loading: boolean; alert: AlertObj; style: object }) {
-	useEffect(() => {
-		return () => {
-			console.log("Alert unmounted");
-		};
-	}, []);
-
 	if (loading) {
 		return <Loading />;
 	} else if (!alert.type) {

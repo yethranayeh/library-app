@@ -1,7 +1,8 @@
 /** @format */
 
-import { db } from "./Firebase-config";
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import { GoogleAuthProvider, OAuthCredential, signInWithPopup, signOut } from "firebase/auth";
+import { db, auth } from "./Firebase-config";
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Navbar";
@@ -30,7 +31,14 @@ function useDelayUnmount(isMounted: boolean, delayTime: number) {
 }
 
 export default function App() {
+	// Main states
+	const [books, setBooks] = useState([] as Book[]);
 	const [tableLoading, setTableLoading] = useState(true);
+	const [user, setUser] = useState(null as object | null);
+
+	const booksCollectionRef = collection(db, "books");
+
+	// Alert
 	const [alert, setAlert] = useState({
 		type: "",
 		title: "",
@@ -42,9 +50,6 @@ export default function App() {
 	const alertBeginTimer = () => setTimeout(() => setShowAlert(false), 2500);
 	const alertMountedStyle = { animation: "inAnimation 500ms ease-in" };
 	const alertUnmountedStyle = { animation: "outAnimation 500ms ease-in" };
-	const [books, setBooks] = useState([] as Book[]);
-
-	const booksCollectionRef = collection(db, "books");
 
 	useEffect(() => {
 		let isSubscribed = true;
@@ -58,6 +63,64 @@ export default function App() {
 			isSubscribed = false;
 		};
 	}, []);
+
+	async function signInWithGoogle() {
+		setShowAlert(true);
+		setAlertLoading(true);
+
+		try {
+			const provider = new GoogleAuthProvider();
+			const result = await signInWithPopup(auth, provider);
+			const credential = GoogleAuthProvider.credentialFromResult(result);
+			const token = (credential as OAuthCredential).accessToken;
+			// The signed-in user info.
+			const user = result.user;
+			setUser(user);
+			setAlert({
+				type: "success",
+				title: `Welcome ${user.displayName}!`,
+				description: "You have successfully signed in."
+			});
+		} catch (error: any) {
+			// Handle Errors here.
+			const errorCode = error.code;
+			const errorMessage = error.message;
+			// The email of the user's account used.
+			const email = error.email;
+			setAlert({
+				type: "error",
+				title: `Error: ${errorCode}`,
+				description: errorMessage + "\nLogged in as: " + email
+			});
+		} finally {
+			setAlertLoading(false);
+			alertBeginTimer();
+		}
+	}
+
+	async function userSignOut() {
+		setShowAlert(true);
+		setAlertLoading(true);
+
+		try {
+			await signOut(auth);
+			setUser(null);
+			setAlert({
+				type: "success",
+				title: "Success",
+				description: "You have successfully signed out."
+			});
+		} catch (error: any) {
+			setAlert({
+				type: "error",
+				title: "Error",
+				description: error.message
+			});
+		} finally {
+			setAlertLoading(false);
+			alertBeginTimer();
+		}
+	}
 
 	async function addBook(book: Book) {
 		setShowAlert(true);
@@ -179,7 +242,7 @@ export default function App() {
 
 	return (
 		<BrowserRouter basename={devBaseName}>
-			<Navbar />
+			<Navbar user={user} login={signInWithGoogle} logout={userSignOut} />
 			<Routes>
 				<Route
 					path='/'
