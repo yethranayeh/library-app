@@ -32,7 +32,6 @@ function useDelayUnmount(isMounted: boolean, delayTime: number) {
 
 export default function App() {
 	// Main states
-	const [isMounted, setIsMounted] = useState(false);
 	const [books, setBooks] = useState([] as Book[]);
 	const [tableLoading, setTableLoading] = useState(true);
 	const [user, setUser] = useState(null as object | null);
@@ -48,7 +47,7 @@ export default function App() {
 	const [alertLoading, setAlertLoading] = useState(false);
 	const [showAlert, setShowAlert] = useState(false);
 	const shouldRenderAlert = useDelayUnmount(showAlert, 500);
-	const alertBeginTimer = () => setTimeout(() => setShowAlert(false), 2500);
+	const alertBeginTimer = () => setTimeout(() => setShowAlert(false), 3000);
 	const alertMountedStyle = { animation: "inAnimation 500ms ease-in" };
 	const alertUnmountedStyle = { animation: "outAnimation 500ms ease-in" };
 
@@ -68,18 +67,20 @@ export default function App() {
 						setBooks(books);
 					})
 					.catch((error) => {});
-			} else {
-				// User is signed out
-				if (isMounted) {
-					setUser(null);
-					setAlert({
-						type: "success",
-						title: "Success",
-						description: "You have successfully signed out."
-					});
-					setBooks([]);
-				}
 			}
+			// else if (user === null) {
+			// 	// User is signed out
+			// 	if (isMounted) {
+			// 		setUser(null);
+			// 		// setAlert({
+			// 		// 	type: "success",
+			// 		// 	title: "Success",
+			// 		// 	description: "You have successfully signed out."
+			// 		// });
+			// 		setBooks([]);
+			// 		// alertBeginTimer();
+			// 	}
+			// }
 		});
 
 		if (user) {
@@ -100,11 +101,9 @@ export default function App() {
 			setAlert({
 				type: "danger",
 				title: "You are not logged in",
-				description: "Please login to see your books or add new ones."
+				description: "Please login to see your books or to add new ones."
 			});
 		}
-
-		setIsMounted(true);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -113,8 +112,6 @@ export default function App() {
 		setAlertLoading(true);
 
 		const provider = new GoogleAuthProvider();
-
-		// If mobile device, use redirect instead of popup
 		try {
 			await signInWithPopup(auth, provider);
 			// const result = await signInWithPopup(auth, provider);
@@ -138,8 +135,9 @@ export default function App() {
 			setAlert({
 				type: "error",
 				title: `Error: ${errorCode}`,
-				description: errorMessage + "\nLogged in as: " + email
+				description: errorMessage + `\nProvided email: ${email ? email : "None"}`
 			});
+			setUser(null);
 		} finally {
 			setAlertLoading(false);
 			alertBeginTimer();
@@ -152,13 +150,13 @@ export default function App() {
 
 		try {
 			await signOut(auth);
-			// setUser(null);
-			// setAlert({
-			// 	type: "success",
-			// 	title: "Success",
-			// 	description: "You have successfully signed out."
-			// });
-			// setBooks([]);
+			setUser(null);
+			setAlert({
+				type: "success",
+				title: "Success",
+				description: "You have successfully signed out."
+			});
+			setBooks([]);
 		} catch (error: any) {
 			setAlert({
 				type: "error",
@@ -184,12 +182,19 @@ export default function App() {
 				description: "Book added successfully"
 			});
 		} catch (e) {
-			console.error("Error adding document: ", e);
-			setAlert({
-				type: "error",
-				title: "Error!",
-				description: "Book could not be added."
-			});
+			if (user) {
+				setAlert({
+					type: "error",
+					title: "Error!",
+					description: "Book could not be added."
+				});
+			} else {
+				setAlert({
+					type: "error",
+					title: "Error!",
+					description: "You need to login to add books."
+				});
+			}
 		} finally {
 			setAlertLoading(false);
 			alertBeginTimer();
@@ -208,7 +213,6 @@ export default function App() {
 
 			return books as Book[];
 		} catch (e) {
-			console.error("Error getting documents: ", e);
 			setAlert({
 				type: "error",
 				title: "Error!",
@@ -232,7 +236,6 @@ export default function App() {
 				description: "Book updated successfully"
 			});
 		} catch (e) {
-			console.error("Error updating document: ", e);
 			setAlert({
 				type: "error",
 				title: "Error!",
@@ -260,7 +263,6 @@ export default function App() {
 				description: "Book removed successfully"
 			});
 		} catch (e) {
-			console.error("Error removing document: ", e);
 			setAlert({
 				type: "error",
 				title: "Error!",
