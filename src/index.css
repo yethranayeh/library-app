@@ -34,6 +34,30 @@ h1 {
 	user-select: none;
 }
 
+.loading {
+	margin-top: 5rem;
+}
+
+.loader {
+	width: 48px;
+	height: 48px;
+	border: 5px solid var(--header-color);
+	border-bottom-color: transparent;
+	border-radius: 50%;
+	display: inline-block;
+	box-sizing: border-box;
+	animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
 /* Component Classes */
 
 .container {

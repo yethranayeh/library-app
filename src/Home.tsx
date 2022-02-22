@@ -1,8 +1,26 @@
 /** @format */
 import Book from "./interface/Book";
 
-export default function Home({ books, removeBookHandler }: { books: Book[]; removeBookHandler: Function }) {
-	if (books.length === 0) {
+export default function Home({
+	books,
+	removeBookHandler,
+	updateBookHandler,
+	loading
+}: {
+	books: Book[];
+	removeBookHandler: Function;
+	updateBookHandler: Function;
+	loading: boolean;
+}) {
+	if (loading) {
+		return (
+			<div className='App'>
+				<div className='col loading'>
+					<span className='loader'></span>
+				</div>
+			</div>
+		);
+	} else if (books.length === 0) {
 		return (
 			<div className='App'>
 				<div className='col'>
@@ -18,28 +36,38 @@ export default function Home({ books, removeBookHandler }: { books: Book[]; remo
 			<div className='col'>
 				<h1>Books</h1>
 				<table className='Books__Table'>
-					<tr>
-						<th>Name</th>
-						<th>Author</th>
-						<th>Pages</th>
-						<th>Read</th>
-						<th style={{ color: "var(--danger)" }}>Remove</th>
-					</tr>
-					{books.map((book) => (
-						<tr key={book.id}>
-							<td>{book.name}</td>
-							<td>{book.author}</td>
-							<td>{book.pages}</td>
-							<td>
-								<input type='checkbox' defaultChecked={book.read} />
-							</td>
-							<td>
-								<span className='Button__Delete disable-select' onClick={() => removeBookHandler(book)}>
-									Remove
-								</span>
-							</td>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Author</th>
+							<th>Pages</th>
+							<th>Read</th>
+							<th style={{ color: "var(--danger)" }}>Remove</th>
 						</tr>
-					))}
+					</thead>
+					<tbody>
+						{books.map((book) => (
+							<tr key={book.id}>
+								<td>{book.name}</td>
+								<td>{book.author}</td>
+								<td>{book.pages}</td>
+								<td>
+									<input
+										type='checkbox'
+										defaultChecked={book.read}
+										onChange={(event) => {
+											updateBookHandler(book.id, event.target.checked);
+										}}
+									/>
+								</td>
+								<td>
+									<span className='Button__Delete disable-select' onClick={() => removeBookHandler(book)}>
+										Remove
+									</span>
+								</td>
+							</tr>
+						))}
+					</tbody>
 				</table>
 			</div>
 		</div>

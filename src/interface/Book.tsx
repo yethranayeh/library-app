@@ -1,7 +1,7 @@
 /** @format */
 
 export default interface Book {
-	id: number;
+	id?: string;
 	name: string;
 	author: string;
 	pages: number;
