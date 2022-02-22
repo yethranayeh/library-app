@@ -9,6 +9,7 @@
 	--error: #dc4c4b;
 
 	--border-radius: 10px;
+	--gap-sm: 0.4rem;
 	--gap-md: 1rem;
 	--padding-md: 1rem;
 	--margin-sm: 0.4rem;
@@ -44,6 +45,7 @@ body {
 
 h1 {
 	color: var(--header-color);
+	margin-bottom: var(--margin-sm);
 }
 
 .disable-select {
@@ -105,14 +107,20 @@ h1 {
 .Navbar {
 	display: flex;
 	justify-content: center;
+	padding: var(--padding-md);
 	gap: 75px;
-	margin-bottom: var(--margin-lg);
+	margin-bottom: var(--margin-sm);
 }
 
 .Navbar__Link {
-	font-size: larger;
+	display: flex;
+	align-items: center;
+	gap: var(--gap-sm);
+
+	font-size: 1.3rem;
 	color: var(--header-color);
 	text-decoration: none;
+
 	border-bottom: 1px solid rgba(0, 0, 0, 0);
 	transition: border-bottom 200ms ease, transform 100ms ease-in;
 }
