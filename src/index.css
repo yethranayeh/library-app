@@ -236,7 +236,7 @@ th {
 }
 
 td {
-	padding: 10px 15px;
+	padding: 10px 35px;
 }
 
 tr:nth-child(even) {
@@ -286,4 +286,36 @@ input:required {
 
 button {
 	padding: 5px 20px;
+}
+
+@media screen and (max-width: 1200px) {
+	td {
+		padding: 10px 25px;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	td {
+		padding: 10px 15px;
+	}
+}
+
+@media screen and (max-width: 576px) {
+	.Button__Delete {
+		padding: 5px 7px;
+	}
+
+	td {
+		padding: 10px 13px;
+	}
+}
+
+@media screen and (max-width: 350px) {
+	.Button__Delete {
+		padding: 5px 3px;
+	}
+
+	td {
+		padding: 10px 9px;
+	}
 }
