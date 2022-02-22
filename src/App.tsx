@@ -14,6 +14,21 @@ import AddBooks from "./AddBooks";
 const devBaseName = "";
 // const prodBaseName = "/library-app";
 
+function useDelayUnmount(isMounted: boolean, delayTime: number) {
+	const [shouldRender, setShouldRender] = useState(false);
+
+	useEffect(() => {
+		let timeoutId: any;
+		if (isMounted && !shouldRender) {
+			setShouldRender(true);
+		} else if (!isMounted && shouldRender) {
+			timeoutId = setTimeout(() => setShouldRender(false), delayTime);
+		}
+		return () => clearTimeout(timeoutId);
+	}, [isMounted, delayTime, shouldRender]);
+	return shouldRender;
+}
+
 export default function App() {
 	const [tableLoading, setTableLoading] = useState(true);
 	const [alert, setAlert] = useState({
@@ -21,8 +36,12 @@ export default function App() {
 		title: "",
 		description: ""
 	});
-	const [showAlert, setShowAlert] = useState(true);
 	const [alertLoading, setAlertLoading] = useState(false);
+	const [showAlert, setShowAlert] = useState(false);
+	const shouldRenderAlert = useDelayUnmount(showAlert, 500);
+	const alertBeginTimer = () => setTimeout(() => setShowAlert(false), 2500);
+	const alertMountedStyle = { animation: "inAnimation 500ms ease-in" };
+	const alertUnmountedStyle = { animation: "outAnimation 500ms ease-in" };
 	const [books, setBooks] = useState([] as Book[]);
 
 	const booksCollectionRef = collection(db, "books");
@@ -41,6 +60,7 @@ export default function App() {
 	}, []);
 
 	async function addBook(book: Book) {
+		setShowAlert(true);
 		setAlertLoading(true);
 		try {
 			await addDoc(booksCollectionRef, book);
@@ -60,6 +80,7 @@ export default function App() {
 			});
 		} finally {
 			setAlertLoading(false);
+			alertBeginTimer();
 		}
 	}
 
@@ -86,6 +107,7 @@ export default function App() {
 	}
 
 	async function updateBookRead(id: string, read: boolean) {
+		setShowAlert(true);
 		setAlertLoading(true);
 		try {
 			const bookDoc = doc(db, "books", id);
@@ -106,10 +128,12 @@ export default function App() {
 			});
 		} finally {
 			setAlertLoading(false);
+			alertBeginTimer();
 		}
 	}
 
 	async function removeBook(book: Book) {
+		setShowAlert(true);
 		setAlertLoading(true);
 		const bookRef = doc(db, `books/${book.id}`);
 
@@ -132,6 +156,7 @@ export default function App() {
 			});
 		} finally {
 			setAlertLoading(false);
+			alertBeginTimer();
 		}
 	}
 
@@ -169,7 +194,13 @@ export default function App() {
 				/>
 				<Route path='/add-books' element={<AddBooks submitHandler={submitHandler} />} />
 			</Routes>
-			{showAlert && <Alert loading={alertLoading} alert={alert as AlertObj} />}
+			{shouldRenderAlert && (
+				<Alert
+					style={showAlert ? alertMountedStyle : alertUnmountedStyle}
+					loading={alertLoading}
+					alert={alert as AlertObj}
+				/>
+			)}
 		</BrowserRouter>
 	);
 }
