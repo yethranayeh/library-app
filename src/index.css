@@ -273,10 +273,23 @@ td:nth-child(1) {
 }
 
 /* Add book Section */
+label,
+input {
+	font-size: 1.1rem;
+}
+
 input {
 	border: none;
 	outline: none;
 	border: 2px solid transparent;
+}
+
+input[type="checkbox"] {
+	-ms-transform: scale(1.4); /* IE */
+	-moz-transform: scale(1.4); /* FF */
+	-webkit-transform: scale(1.4); /* Safari and Chrome */
+	-o-transform: scale(1.4); /* Opera */
+	transform: scale(1.4);
 }
 
 input:required:invalid {
@@ -291,7 +304,8 @@ input:required {
 	border-color: rgb(155, 255, 155);
 }
 
-button {
+#bookSubmit {
+	font-size: 1.1rem;
 	padding: 5px 20px;
 }
 
