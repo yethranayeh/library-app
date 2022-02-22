@@ -111,7 +111,7 @@ h1 {
 	gap: 75px;
 	margin-bottom: var(--margin-sm);
 	border-bottom: 2px solid var(--header-color);
-	box-shadow: 0px 5px 5px -4px var(--th-bg);
+	box-shadow: 0px 7px 5px -6px var(--th-bg);
 }
 
 .Navbar__Link {
@@ -253,16 +253,19 @@ td:nth-child(1) {
 }
 
 .Button__Delete {
-	background-color: var(--danger);
-	padding: 5px 15px;
-	color: #fff;
+	display: flex;
+	justify-content: center;
+	align-self: center;
 	cursor: pointer;
+	padding: 6px 6px;
+	color: #fff;
+	background-color: var(--error);
 	border-radius: 5px;
-	transition: background-color 150ms ease-in;
+	transition: background-color 150ms ease-in, color 150ms ease-in;
 }
 
 .Button__Delete:hover {
-	background-color: #ca5121;
+	background-color: #af3c3c;
 	color: #eee;
 }
 
@@ -302,10 +305,6 @@ button {
 }
 
 @media screen and (max-width: 576px) {
-	.Button__Delete {
-		padding: 5px 7px;
-	}
-
 	td {
 		padding: 10px 13px;
 	}
@@ -320,10 +319,6 @@ button {
 }
 
 @media screen and (max-width: 350px) {
-	.Button__Delete {
-		padding: 5px 3px;
-	}
-
 	td {
 		padding: 10px 9px;
 	}
