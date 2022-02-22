@@ -6,8 +6,6 @@ import Loading from "./Loading";
 
 export default function Alert({ loading, alert, style }: { loading: boolean; alert: AlertObj; style: object }) {
 	useEffect(() => {
-		console.log("Alert mounted");
-
 		return () => {
 			console.log("Alert unmounted");
 		};
