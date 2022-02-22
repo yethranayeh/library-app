@@ -52,16 +52,27 @@ export default function App() {
 	const alertUnmountedStyle = { animation: "outAnimation 500ms ease-in" };
 
 	useEffect(() => {
-		let isSubscribed = true;
-		fetchBooks().then((books) => {
-			if (isSubscribed) {
-				setBooks(books);
-				setTableLoading(false);
-			}
-		});
-		return () => {
-			isSubscribed = false;
-		};
+		if (user) {
+			let isSubscribed = true;
+			fetchBooks().then((books) => {
+				if (isSubscribed) {
+					setBooks(books);
+					setTableLoading(false);
+				}
+			});
+			return () => {
+				isSubscribed = false;
+			};
+		} else {
+			setBooks([]);
+			setTableLoading(false);
+			setShowAlert(true);
+			setAlert({
+				type: "danger",
+				title: "You are not logged in",
+				description: "Please login to see your books or add new ones."
+			});
+		}
 	}, []);
 
 	async function signInWithGoogle() {
@@ -81,6 +92,8 @@ export default function App() {
 				title: `Welcome ${user.displayName}!`,
 				description: "You have successfully signed in."
 			});
+			const userBooks = await fetchBooks();
+			setBooks(userBooks);
 		} catch (error: any) {
 			// Handle Errors here.
 			const errorCode = error.code;
@@ -110,6 +123,7 @@ export default function App() {
 				title: "Success",
 				description: "You have successfully signed out."
 			});
+			setBooks([]);
 		} catch (error: any) {
 			setAlert({
 				type: "error",
