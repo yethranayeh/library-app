@@ -1,6 +1,6 @@
 /** @format */
 
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, CollectionReference } from "firebase/firestore";
 import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { db, auth } from "./Firebase-config";
 import { useState, useEffect } from "react";
@@ -35,8 +35,8 @@ export default function App() {
 	const [books, setBooks] = useState([] as Book[]);
 	const [tableLoading, setTableLoading] = useState(true);
 	const [user, setUser] = useState(null as object | null);
-	const [booksCollectionRef, setBooksCollectionRef] = useState(collection(db, "books"));
-	const [booksUserRef, setbooksUserRef] = useState("books");
+	const [booksCollectionRef, setBooksCollectionRef] = useState(collection(db, "temp"));
+	const [booksUserRef, setbooksUserRef] = useState("temp");
 
 	// Alert
 	const [alert, setAlert] = useState({
@@ -64,11 +64,11 @@ export default function App() {
 					title: `Welcome ${user?.displayName}!`,
 					description: "You have successfully signed in."
 				});
-				fetchBooks()
-					.then((books) => {
-						setBooks(books);
-					})
-					.catch((error) => {});
+				// fetchBooks()
+				// 	.then((books) => {
+				// 		setBooks(books);
+				// 	})
+				// 	.catch((error) => {});
 			}
 			// else if (user === null) {
 			// 	// User is signed out
@@ -87,12 +87,12 @@ export default function App() {
 
 		if (user) {
 			let isSubscribed = true;
-			fetchBooks().then((books) => {
-				if (isSubscribed) {
-					setBooks(books);
-					setTableLoading(false);
-				}
-			});
+			// fetchBooks().then((books) => {
+			// 	if (isSubscribed) {
+			// 		setBooks(books);
+			// 		setTableLoading(false);
+			// 	}
+			// });
 			return () => {
 				isSubscribed = false;
 			};
@@ -108,6 +108,12 @@ export default function App() {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
+	useEffect(() => {
+		if (booksUserRef !== "temp") {
+			fetchBooks().then((books) => setBooks(books));
+		}
+	}, [booksUserRef]);
 
 	async function signInWithGoogle() {
 		setShowAlert(true);
@@ -223,11 +229,19 @@ export default function App() {
 
 			return books as Book[];
 		} catch (e) {
-			setAlert({
-				type: "error",
-				title: "Error!",
-				description: "Books could not be fetched."
-			});
+			if (user) {
+				setAlert({
+					type: "error",
+					title: "Error!",
+					description: "Books could not be fetched."
+				});
+			} else {
+				setAlert({
+					type: "danger",
+					title: "Notice",
+					description: "You need to login to see your books."
+				});
+			}
 			return [];
 		}
 	}
