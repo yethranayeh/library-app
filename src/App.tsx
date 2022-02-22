@@ -12,9 +12,6 @@ import Home from "./Home";
 import Book from "./interface/Book";
 import AddBooks from "./AddBooks";
 
-// const devBaseName = "";
-const prodBaseName = "/library-app";
-
 function useDelayUnmount(isMounted: boolean, delayTime: number) {
 	const [shouldRender, setShouldRender] = useState(false);
 
@@ -316,11 +313,11 @@ export default function App() {
 	}
 
 	return (
-		<HashRouter basename={prodBaseName}>
+		<HashRouter>
 			<Navbar user={user} login={signInWithGoogle} logout={userSignOut} />
 			<Routes>
 				<Route
-					path='/'
+					path='/library-app'
 					element={
 						<Home
 							loading={tableLoading}
@@ -330,7 +327,7 @@ export default function App() {
 						/>
 					}
 				/>
-				<Route path='/add-books' element={<AddBooks submitHandler={submitHandler} />} />
+				<Route path='/library-app/add-books' element={<AddBooks submitHandler={submitHandler} />} />
 			</Routes>
 			{shouldRenderAlert && (
 				<Alert
