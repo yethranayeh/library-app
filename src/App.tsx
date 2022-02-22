@@ -1,7 +1,7 @@
 /** @format */
 
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "firebase/firestore";
-import { GoogleAuthProvider, OAuthCredential, signInWithPopup, signOut } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { db, auth } from "./Firebase-config";
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -32,6 +32,7 @@ function useDelayUnmount(isMounted: boolean, delayTime: number) {
 
 export default function App() {
 	// Main states
+	const [isMounted, setIsMounted] = useState(false);
 	const [books, setBooks] = useState([] as Book[]);
 	const [tableLoading, setTableLoading] = useState(true);
 	const [user, setUser] = useState(null as object | null);
@@ -52,6 +53,35 @@ export default function App() {
 	const alertUnmountedStyle = { animation: "outAnimation 500ms ease-in" };
 
 	useEffect(() => {
+		onAuthStateChanged(auth, (user) => {
+			if (user) {
+				// User is signed in, see docs for a list of available properties
+				// const uid = user.uid;
+				setUser(user as any);
+				setAlert({
+					type: "success",
+					title: `Welcome ${user?.displayName}!`,
+					description: "You have successfully signed in."
+				});
+				fetchBooks()
+					.then((books) => {
+						setBooks(books);
+					})
+					.catch((error) => {});
+			} else {
+				// User is signed out
+				if (isMounted) {
+					setUser(null);
+					setAlert({
+						type: "success",
+						title: "Success",
+						description: "You have successfully signed out."
+					});
+					setBooks([]);
+				}
+			}
+		});
+
 		if (user) {
 			let isSubscribed = true;
 			fetchBooks().then((books) => {
@@ -73,27 +103,32 @@ export default function App() {
 				description: "Please login to see your books or add new ones."
 			});
 		}
+
+		setIsMounted(true);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	async function signInWithGoogle() {
 		setShowAlert(true);
 		setAlertLoading(true);
 
+		const provider = new GoogleAuthProvider();
+
+		// If mobile device, use redirect instead of popup
 		try {
-			const provider = new GoogleAuthProvider();
-			const result = await signInWithPopup(auth, provider);
-			const credential = GoogleAuthProvider.credentialFromResult(result);
-			const token = (credential as OAuthCredential).accessToken;
+			await signInWithPopup(auth, provider);
+			// const result = await signInWithPopup(auth, provider);
+
 			// The signed-in user info.
-			const user = result.user;
-			setUser(user);
-			setAlert({
-				type: "success",
-				title: `Welcome ${user.displayName}!`,
-				description: "You have successfully signed in."
-			});
-			const userBooks = await fetchBooks();
-			setBooks(userBooks);
+			// const user = result.user;
+			// setUser(user);
+			// setAlert({
+			// 	type: "success",
+			// 	title: `Welcome ${user.displayName}!`,
+			// 	description: "You have successfully signed in."
+			// });
+			// const userBooks = await fetchBooks();
+			// setBooks(userBooks);
 		} catch (error: any) {
 			// Handle Errors here.
 			const errorCode = error.code;
@@ -117,13 +152,13 @@ export default function App() {
 
 		try {
 			await signOut(auth);
-			setUser(null);
-			setAlert({
-				type: "success",
-				title: "Success",
-				description: "You have successfully signed out."
-			});
-			setBooks([]);
+			// setUser(null);
+			// setAlert({
+			// 	type: "success",
+			// 	title: "Success",
+			// 	description: "You have successfully signed out."
+			// });
+			// setBooks([]);
 		} catch (error: any) {
 			setAlert({
 				type: "error",

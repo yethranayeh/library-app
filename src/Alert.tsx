@@ -1,5 +1,4 @@
 /** @format */
-import { useEffect } from "react";
 import AlertObj from "./interface/AlertObj";
 import AlertIcon from "./AlertIcon";
 import Loading from "./Loading";
