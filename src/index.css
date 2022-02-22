@@ -106,9 +106,10 @@ h1 {
 
 .Navbar {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
 	padding: var(--padding-md);
-	gap: 75px;
+	gap: var(--gap-md);
 	margin-bottom: var(--margin-sm);
 	border-bottom: 2px solid var(--header-color);
 	box-shadow: 0px 7px 5px -6px var(--th-bg);
@@ -118,6 +119,7 @@ h1 {
 	display: flex;
 	align-items: center;
 	gap: var(--gap-sm);
+	margin-right: var(--gap-md);
 
 	font-size: 1.3rem;
 	color: var(--header-color);
