@@ -35,8 +35,8 @@ export default function App() {
 	const [books, setBooks] = useState([] as Book[]);
 	const [tableLoading, setTableLoading] = useState(true);
 	const [user, setUser] = useState(null as object | null);
-
-	const booksCollectionRef = collection(db, "books");
+	const [booksCollectionRef, setBooksCollectionRef] = useState(collection(db, "books"));
+	const [booksUserRef, setbooksUserRef] = useState("books");
 
 	// Alert
 	const [alert, setAlert] = useState({
@@ -55,8 +55,10 @@ export default function App() {
 		onAuthStateChanged(auth, (user) => {
 			if (user) {
 				// User is signed in, see docs for a list of available properties
-				// const uid = user.uid;
+				const uid = user.uid;
 				setUser(user as any);
+				setBooksCollectionRef(collection(db, `users/${uid}/books/`));
+				setbooksUserRef(uid);
 				setAlert({
 					type: "success",
 					title: `Welcome ${user?.displayName}!`,
@@ -205,11 +207,19 @@ export default function App() {
 		try {
 			const data = await getDocs(booksCollectionRef);
 			const books = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-			setAlert({
-				type: "success",
-				title: "Success",
-				description: "Books fetched successfully"
-			});
+			if (books.length === 0) {
+				setAlert({
+					type: "danger",
+					title: "No books found",
+					description: "Connection was successful, but no books were found."
+				});
+			} else {
+				setAlert({
+					type: "success",
+					title: "Success",
+					description: "Books fetched successfully"
+				});
+			}
 
 			return books as Book[];
 		} catch (e) {
@@ -226,7 +236,7 @@ export default function App() {
 		setShowAlert(true);
 		setAlertLoading(true);
 		try {
-			const bookDoc = doc(db, "books", id);
+			const bookDoc = doc(db, "users", booksUserRef, "books", id);
 			await updateDoc(bookDoc, { read: read });
 			const updatedBooks = await fetchBooks();
 			setBooks(updatedBooks);
@@ -250,7 +260,7 @@ export default function App() {
 	async function removeBook(book: Book) {
 		setShowAlert(true);
 		setAlertLoading(true);
-		const bookRef = doc(db, `books/${book.id}`);
+		const bookRef = doc(db, `users/${booksUserRef}/books/${book.id}`);
 
 		try {
 			await deleteDoc(bookRef);
