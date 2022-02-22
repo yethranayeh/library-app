@@ -4,7 +4,15 @@
 	--th-bg: #403d39;
 	--tr-even: #fffcf2;
 	--tr-odd: #ccc5b9;
+	--success: #1fca71;
 	--danger: #eb5e28;
+	--error: #dc4c4b;
+
+	--border-radius: 10px;
+	--gap-md: 1rem;
+	--padding-md: 1rem;
+	--margin-sm: 0.4rem;
+	--margin-lg: 2.5rem;
 }
 
 *,
@@ -15,6 +23,17 @@
 
 * {
 	font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+/* Small reset */
+
+h1,
+h2,
+p {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	vertical-align: baseline;
 }
 
 /* General */
@@ -87,6 +106,7 @@ h1 {
 	display: flex;
 	justify-content: center;
 	gap: 75px;
+	margin-bottom: var(--margin-lg);
 }
 
 .Navbar__Link {
@@ -101,6 +121,64 @@ h1 {
 	color: var(--th-bg);
 	border-bottom: 1px solid var(--th-bg);
 	transform: translateY(-2px);
+}
+
+/* Alert */
+
+.Alert {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: var(--gap-md);
+	margin: var(--margin-lg);
+	padding: var(--padding-md);
+
+	border: 2px solid black;
+	border-radius: var(--border-radius);
+	background-color: var(--tr-even);
+}
+
+.Alert.success {
+	color: var(--success);
+	border-color: var(--success);
+}
+
+.Alert.danger {
+	color: var(--danger);
+	border-color: var(--danger);
+}
+
+.Alert.error {
+	color: var(--error);
+	border-color: var(--error);
+}
+
+.Alert__Header {
+	width: 100%;
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+}
+
+.Alert__Title {
+	color: var(--header-color);
+}
+
+.Alert__Icon {
+	width: 2rem;
+	height: 2rem;
+
+	margin-right: var(--margin-sm);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.Alert__Description {
+	color: var(--th-bg);
+	font-size: 1.1rem;
+	word-wrap: break-word;
 }
 
 /* Books Section */

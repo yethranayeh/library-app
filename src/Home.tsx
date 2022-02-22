@@ -1,5 +1,6 @@
 /** @format */
 import Book from "./interface/Book";
+import Loading from "./Loading";
 
 export default function Home({
 	books,
@@ -13,13 +14,7 @@ export default function Home({
 	loading: boolean;
 }) {
 	if (loading) {
-		return (
-			<div className='App'>
-				<div className='col loading'>
-					<span className='loader'></span>
-				</div>
-			</div>
-		);
+		return <Loading />;
 	} else if (books.length === 0) {
 		return (
 			<div className='App'>
