@@ -1,6 +1,6 @@
 /** @format */
 
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, CollectionReference } from "firebase/firestore";
+import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { db, auth } from "./Firebase-config";
 import { useState, useEffect } from "react";
@@ -12,8 +12,8 @@ import Home from "./Home";
 import Book from "./interface/Book";
 import AddBooks from "./AddBooks";
 
-const devBaseName = "";
-// const prodBaseName = "/library-app";
+// const devBaseName = "";
+const prodBaseName = "/library-app";
 
 function useDelayUnmount(isMounted: boolean, delayTime: number) {
 	const [shouldRender, setShouldRender] = useState(false);
@@ -316,7 +316,7 @@ export default function App() {
 	}
 
 	return (
-		<HashRouter basename={devBaseName}>
+		<HashRouter basename={prodBaseName}>
 			<Navbar user={user} login={signInWithGoogle} logout={userSignOut} />
 			<Routes>
 				<Route
